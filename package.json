@@ -1,0 +1,28 @@
+{
+    "name": "p5sbankeyboard",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "postinstall": "patch-package"
+    },
+    "devDependencies": {
+        "@types/encoding-japanese": "^2.2.1",
+        "@types/node": "^24.2.1",
+        "typescript": "^5.5.3",
+        "vite": "^7.1.1"
+    },
+    "dependencies": {
+        "@types/p5": "^1.7.6",
+        "bignumber.js": "^9.3.1",
+        "encoding-japanese": "^2.2.0",
+        "mathjs": "^14.6.0",
+        "p5": "^1.11.0",
+        "patch-package": "^8.0.0",
+        "tone": "^15.1.22",
+        "webmidi": "^3.1.12"
+    }
+}
