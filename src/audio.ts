@@ -55,8 +55,8 @@ export const onNoteMessage = (e: NoteMessageEvent) => {
     if (!isToneStarted) return;
     Tone.loaded().then(() => {
         if (e.type === "noteon") {
-            click.triggerAttackRelease(e.note.identifier, 0.3, Tone.now(), 0.22);
-            synth.triggerAttack(e.note.identifier, Tone.now(), 0.04);
+            click.triggerAttackRelease(e.note.identifier, 0.3, Tone.now(), 0.17);
+            synth.triggerAttack(e.note.identifier, Tone.now(), 0.07);
         } else if (e.type === "noteoff") {
             synth.triggerRelease(e.note.identifier, Tone.now());
         }

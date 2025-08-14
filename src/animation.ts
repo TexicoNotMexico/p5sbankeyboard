@@ -2,7 +2,7 @@ import { Graphics } from "p5";
 
 export abstract class Animation {
     private durationFrames: number;
-    private startFrame: number | null = null;
+    protected startFrame: number | null = null;
     private active = false;
 
     constructor(durationFrames: number) {
