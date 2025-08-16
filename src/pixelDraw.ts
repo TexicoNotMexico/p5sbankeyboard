@@ -1,6 +1,7 @@
 import * as constants from "./constants";
 import * as webmidi from "./webmidi";
 import * as animation from "./animation";
+import * as state from "./state";
 import { Color, Graphics } from "p5";
 import { NoteMessageEvent } from "webmidi";
 
@@ -56,6 +57,154 @@ export class RippleAnimation extends animation.Animation {
     }
 }
 
+export const setup = () => {
+    kg = p.createGraphics(300, 45); // keyboard: 33 * 15
+    kg.noSmooth();
+    ripples = new animation.AnimationManager();
+};
+
+export const draw = () => {
+    kg.clear();
+    ripples.draw(kg);
+    keyboard();
+};
+
+const kbOrigin = { x: 150 - 16, y: 45 - 15 };
+
+const keyboard = () => {
+    kg.push();
+    {
+        kg.noStroke();
+        kg.translate(kbOrigin.x, kbOrigin.y);
+
+        if (!state.isFullKeyboard) {
+            // background
+            kg.fill(constants.keyboardColors.base);
+            kg.rect(0, 0, 33, 15);
+
+            // white keys
+            kg.fill(constants.keyboardColors.whiteKeyOff);
+            for (let i = 0; i < 8; i++) {
+                kg.rect(i * 4 + 1, 1, 3, 13);
+            }
+            kg.fill(constants.keyboardColors.whiteKeyOn);
+            for (let [_, note] of webmidi.midiHandler.notes) {
+                if (!note.accidental) {
+                    kg.push();
+                    !(note.number in constants.decodeMapping) && kg.fill(constants.keyboardColors.whiteKeyError);
+                    kg.rect(
+                        (constants.keyPositions[note.name as keyof typeof constants.keyPositions] +
+                            (note.octave - state.octaveOffset) * 7) *
+                            4 +
+                            1,
+                        1,
+                        3,
+                        13
+                    );
+                    kg.pop();
+                }
+            }
+
+            // black keys
+            kg.fill(constants.keyboardColors.blackKeyOff);
+            for (let i = 0; i < 6; i++) {
+                i !== 2 && kg.rect(i * 4 + 3, 1, 3, 9);
+            }
+            kg.fill(constants.keyboardColors.blackKeyOn);
+            for (let [_, note] of webmidi.midiHandler.notes) {
+                if (note.accidental) {
+                    kg.push();
+                    !(note.number in constants.decodeMapping) && kg.fill(constants.keyboardColors.blackKeyError);
+                    kg.rect(
+                        (constants.keyPositions[note.name as keyof typeof constants.keyPositions] +
+                            (note.octave - state.octaveOffset) * 7) *
+                            4 +
+                            3,
+                        1,
+                        3,
+                        9
+                    );
+                    kg.pop();
+                }
+            }
+        } else {
+            fullKeyboard();
+        }
+    }
+    kg.pop();
+};
+
+const fullKeyboard = () => {
+    kg.push();
+    {
+        kg.fill(constants.keyboardColors.base);
+        for (let j = 0; j < 127; j += 12) {
+            kg.push();
+            kg.translate(7 * 4 * (Math.floor(j / 12) - state.octaveOffset), 0);
+            for (let i = 0; i < 7; i++) {
+                kg.rect(i * 4, 0, 5, 15);
+                if (j >= 120 && i === 4) break;
+            }
+            kg.pop();
+        }
+
+        kg.fill(constants.keyboardColors.whiteKeyOff);
+        for (let j = 0; j < 127; j += 12) {
+            kg.push();
+            kg.translate(7 * 4 * (Math.floor(j / 12) - state.octaveOffset), 0);
+            for (let i = 0; i < 7; i++) {
+                kg.rect(i * 4 + 1, 1, 3, 13);
+                if (j >= 120 && i === 4) break;
+            }
+            kg.pop();
+        }
+        kg.fill(constants.keyboardColors.whiteKeyOn);
+        for (let [_, note] of webmidi.midiHandler.notes) {
+            if (!note.accidental) {
+                kg.push();
+                kg.rect(
+                    (constants.keyPositions[note.name as keyof typeof constants.keyPositions] +
+                        (note.octave - state.octaveOffset) * 7) *
+                        4 +
+                        1,
+                    1,
+                    3,
+                    13
+                );
+                kg.pop();
+            }
+        }
+
+        kg.fill(constants.keyboardColors.blackKeyOff);
+        for (let j = 0; j < 127; j += 12) {
+            kg.push();
+            kg.translate(7 * 4 * (Math.floor(j / 12) - state.octaveOffset), 0);
+            for (let i = 0; i < 6; i++) {
+                i !== 2 && kg.rect(i * 4 + 3, 1, 3, 9);
+                if (j >= 120 && i === 3) break;
+            }
+            kg.pop();
+        }
+        kg.fill(constants.keyboardColors.blackKeyOn);
+        for (let [_, note] of webmidi.midiHandler.notes) {
+            if (note.accidental) {
+                kg.push();
+                kg.rect(
+                    (constants.keyPositions[note.name as keyof typeof constants.keyPositions] +
+                        (note.octave - state.octaveOffset) * 7) *
+                        4 +
+                        3,
+                    1,
+                    3,
+                    9
+                );
+                kg.pop();
+            }
+        }
+    }
+    kg.pop();
+};
+
 const jaggyLine = (x0: number, y0: number, x1: number, y1: number, col: Color, tx = 0, ty = 0) => {
     x0 = x0 + tx;
     x1 = x1 + tx;
@@ -89,77 +238,13 @@ const jaggyLine = (x0: number, y0: number, x1: number, y1: number, col: Color, t
 };
 
 const setPixel = (x: number, y: number, col: Color) => {
+    x = Math.max(x, 0);
+    y = Math.max(y, 0);
     const index = 4 * (y * kg.width + x);
     kg.pixels[index] = kg.red(col);
     kg.pixels[index + 1] = kg.green(col);
     kg.pixels[index + 2] = kg.blue(col);
     kg.pixels[index + 3] = kg.alpha(col);
-};
-
-export const setup = () => {
-    kg = p.createGraphics(300, 45); // keyboard: 33 * 15
-    kg.noSmooth();
-    ripples = new animation.AnimationManager();
-};
-
-const kbOrigin = { x: 150 - 16, y: 45 - 15 };
-
-export const draw = () => {
-    kg.clear();
-    ripples.draw(kg);
-    kg.push();
-    {
-        kg.noStroke();
-        kg.translate(kbOrigin.x, kbOrigin.y);
-        // background
-        kg.fill(constants.keyboardColors.base);
-        kg.rect(0, 0, 33, 15);
-
-        // white keys
-        kg.fill(constants.keyboardColors.whiteKeyOff);
-        for (let i = 0; i < 8; i++) {
-            kg.rect(i * 4 + 1, 1, 3, 13);
-        }
-        kg.fill(constants.keyboardColors.whiteKeyOn);
-        for (let [_, note] of webmidi.midiHandler.notes) {
-            if (!note.accidental) {
-                kg.push();
-                !(note.number in constants.decodeMapping) && kg.fill(constants.keyboardColors.whiteKeyError);
-                kg.rect(
-                    (constants.keyPositions[note.name as keyof typeof constants.keyPositions] + (note.octave - 5) * 7) *
-                        4 +
-                        1,
-                    1,
-                    3,
-                    13
-                );
-                kg.pop();
-            }
-        }
-
-        // black keys
-        kg.fill(constants.keyboardColors.blackKeyOff);
-        for (let i = 0; i < 6; i++) {
-            i !== 2 && kg.rect(i * 4 + 3, 1, 3, 9);
-        }
-        kg.fill(constants.keyboardColors.blackKeyOn);
-        for (let [_, note] of webmidi.midiHandler.notes) {
-            if (note.accidental) {
-                kg.push();
-                !(note.number in constants.decodeMapping) && kg.fill(constants.keyboardColors.blackKeyError);
-                kg.rect(
-                    (constants.keyPositions[note.name as keyof typeof constants.keyPositions] + (note.octave - 5) * 7) *
-                        4 +
-                        3,
-                    1,
-                    3,
-                    9
-                );
-                kg.pop();
-            }
-        }
-    }
-    kg.pop();
 };
 
 const radiusList = [1, 3, 3, 3, 6, 6, 6, 10, 10, 10, 11, 11, 13, 13, 13, 14];
@@ -173,7 +258,7 @@ export const onNoteMessage = (e: NoteMessageEvent) => {
                         kbOrigin.x +
                             2 +
                             (constants.keyPositions[e.note.name as keyof typeof constants.keyPositions] +
-                                (e.note.octave - 5) * 7) *
+                                (e.note.octave - state.octaveOffset) * 7) *
                                 4,
                         kbOrigin.y,
                         radiusList,
@@ -186,7 +271,7 @@ export const onNoteMessage = (e: NoteMessageEvent) => {
                         kbOrigin.x +
                             2 +
                             (constants.keyPositions[e.note.name as keyof typeof constants.keyPositions] +
-                                (e.note.octave - 5) * 7) *
+                                (e.note.octave - state.octaveOffset) * 7) *
                                 4 +
                             3,
                         kbOrigin.y,
