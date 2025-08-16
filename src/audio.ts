@@ -17,6 +17,8 @@ export let synth: Tone.PolySynth;
 export const setup = () => {
     window.addEventListener("click", toneStarter);
 
+    Tone.getContext().lookAhead = 0.005;
+
     const urls = Object.fromEntries(Array.from({ length: 128 }, (_, i) => [i, "click.wav"]));
     click = new Tone.Sampler(urls).toDestination();
     synth = new Tone.PolySynth(Tone.Synth, {
