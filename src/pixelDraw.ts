@@ -26,9 +26,9 @@ export class RippleAnimation extends animation.Animation {
                 jaggyLine(cx - 1, cy + 1, cx - 1, cy - 1, canvas.color(255));
                 jaggyLine(cx + 1, cy + 1, cx + 1, cy - 1, canvas.color(255));
             } else {
-                canvas.randomSeed(r + (this.startFrame ?? 0));
+                canvas.randomSeed(r + (this.startFrame ?? 0) + this.x * 128);
 
-                const numPoints = r * 2;
+                const numPoints = r * 2 + 3;
                 const baseStep = canvas.TWO_PI / numPoints;
                 const jitter = canvas.radians(baseStep * 1.5);
 
