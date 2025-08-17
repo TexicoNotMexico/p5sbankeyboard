@@ -10,3 +10,6 @@
 
 - [源ノ角ゴシック](https://github.com/adobe-fonts/source-han-sans) (`public/SourceHanSansJP-Bold.otf`)
   - SIL Open Font License
+
+- [k8x12S](https://littlelimit.net/k8x12.htm#sample_k8x12S) (`public/k8x12S.ttf`)
+  - [License](https://littlelimit.net/font.htm#license)

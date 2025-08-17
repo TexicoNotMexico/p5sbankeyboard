@@ -60,12 +60,14 @@ export const draw = () => {
     p.push();
     {
         p.fill(255);
-        p.textFont(fonts.gennokaku);
+        p.textFont(fonts.k8x12);
         p.textAlign(p.CENTER, p.CENTER);
-        p.textSize(20);
+        p.textSize(32);
         p.text(webmidi.midiHandler.decoder.base7, 0, -400);
-        p.textSize(20 * 1.45);
+        p.textSize(32 * 1.45);
         p.text(webmidi.midiHandler.decoder.base16, 0, -350);
+
+        p.textFont(fonts.gennokaku);
         p.textSize(80);
         p.rectMode(p.CENTER);
         p.textWrap(p.CHAR);
