@@ -1,7 +1,7 @@
-import { Graphics } from "p5";
+import p5, { Graphics } from "p5";
 
 export abstract class Animation {
-    private durationFrames: number;
+    protected durationFrames: number;
     protected startFrame: number | null = null;
     private active = false;
 
@@ -14,7 +14,7 @@ export abstract class Animation {
         this.active = true;
     }
 
-    update(canvas: Graphics) {
+    update(canvas: Graphics | p5) {
         if (!this.active || this.startFrame === null) return;
 
         const elapsed = p.frameCount - this.startFrame;
@@ -31,7 +31,7 @@ export abstract class Animation {
         return this.active;
     }
 
-    protected abstract animate(canvas: Graphics, f: number): void;
+    protected abstract animate(canvas: Graphics | p5, f: number): void;
 }
 
 export class AnimationManager {
@@ -42,7 +42,7 @@ export class AnimationManager {
         this.animations.push(animation);
     }
 
-    draw(canvas: Graphics) {
+    draw(canvas: Graphics | p5) {
         for (const anim of this.animations) {
             anim.update(canvas);
         }

@@ -38,16 +38,16 @@ export const draw = () => {
             p.textFont(fonts.genzen);
             p.textAlign(p.CENTER, p.CENTER);
             p.textSize(80);
-            const textBox = fonts.genzen.textBounds("画面をクリックして音声を有効にする", 0, 0) as {
+            const textBox = fonts.genzen.textBounds("画面をクリックして音声を有効にする。", 0, 0) as {
                 x: number;
                 y: number;
                 w: number;
                 h: number;
             };
             p.rectMode(p.CORNER);
-            p.rect(textBox.x - 5, textBox.y - 5, textBox.w + 10, textBox.h + 10);
+            p.rect(textBox.x - 10, textBox.y - 6, textBox.w + 10, textBox.h + 10);
             p.fill(0);
-            p.text("画面をクリックして音声を有効にする", 0, 0);
+            p.text("画面をクリックして音声を有効にする。", 0, 0);
         }
         p.pop();
     }

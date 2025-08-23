@@ -32,7 +32,3 @@ export const decodeMapping = {
     82: 5, // Bb5
     84: 6, // C6
 };
-
-export const KEY_WIDTH = 4;
-export const WHITE_KEY_HEIGHT = 13;
-export const BLACK_KEY_HEIGHT = 9;

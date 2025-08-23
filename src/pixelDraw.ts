@@ -91,7 +91,9 @@ const keyboard = () => {
             for (let [_, note] of webmidi.midiHandler.notes) {
                 if (!note.accidental) {
                     kg.push();
-                    !(note.number in constants.decodeMapping) && kg.fill(constants.keyboardColors.whiteKeyError);
+                    state.isDecoding &&
+                        !(note.number - 12 * state.octaveOffset + 60 in constants.decodeMapping) &&
+                        kg.fill(constants.keyboardColors.whiteKeyError);
                     kg.rect(
                         (constants.keyPositions[note.name as keyof typeof constants.keyPositions] +
                             (note.octave - state.octaveOffset) * 7) *
@@ -114,7 +116,9 @@ const keyboard = () => {
             for (let [_, note] of webmidi.midiHandler.notes) {
                 if (note.accidental) {
                     kg.push();
-                    !(note.number in constants.decodeMapping) && kg.fill(constants.keyboardColors.blackKeyError);
+                    state.isDecoding &&
+                        !(note.number - 12 * state.octaveOffset + 60 in constants.decodeMapping) &&
+                        kg.fill(constants.keyboardColors.blackKeyError);
                     kg.rect(
                         (constants.keyPositions[note.name as keyof typeof constants.keyPositions] +
                             (note.octave - state.octaveOffset) * 7) *
@@ -162,6 +166,9 @@ const fullKeyboard = () => {
         for (let [_, note] of webmidi.midiHandler.notes) {
             if (!note.accidental) {
                 kg.push();
+                state.isDecoding &&
+                    !(note.number - 12 * state.octaveOffset + 60 in constants.decodeMapping) &&
+                    kg.fill(constants.keyboardColors.whiteKeyError);
                 kg.rect(
                     (constants.keyPositions[note.name as keyof typeof constants.keyPositions] +
                         (note.octave - state.octaveOffset) * 7) *
@@ -189,6 +196,9 @@ const fullKeyboard = () => {
         for (let [_, note] of webmidi.midiHandler.notes) {
             if (note.accidental) {
                 kg.push();
+                state.isDecoding &&
+                    !(note.number - 12 * state.octaveOffset + 60 in constants.decodeMapping) &&
+                    kg.fill(constants.keyboardColors.blackKeyError);
                 kg.rect(
                     (constants.keyPositions[note.name as keyof typeof constants.keyPositions] +
                         (note.octave - state.octaveOffset) * 7) *

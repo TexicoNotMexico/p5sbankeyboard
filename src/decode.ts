@@ -1,5 +1,6 @@
 import Encoding from "encoding-japanese";
 import * as constants from "./constants";
+import * as state from "./state";
 import { BigNumber } from "bignumber.js";
 
 export class Decoder {
@@ -15,7 +16,7 @@ export class Decoder {
 
     private getNoteInputsString(): string {
         return this.rawNoteInputs
-            .filter((n) => n in constants.decodeMapping)
+            .filter((n) => n - 12 * state.octaveOffset + 60 in constants.decodeMapping)
             .map((n) => constants.decodeMapping[n as keyof typeof constants.decodeMapping])
             .join("");
     }
