@@ -1,12 +1,14 @@
 import * as Tone from "tone";
 import * as fonts from "./fonts";
+import * as state from "./state";
 import { NoteMessageEvent } from "webmidi";
 
 export let isToneStarted: boolean;
 
 let isKeyboardAnimating: boolean = false;
 let keyboardAnimationF: number = 0;
-export let keyboardScale: number = 60;
+export let keyboardScale: number = 10;
+export let keyboardHeight: number = 1700;
 
 export const toneStarter = async () => {
     if (isToneStarted) return;
@@ -67,6 +69,7 @@ const keyboardAnimation = () => {
     }
     const elapsed = keyboardAnimationF / keyboardAnimationDuration;
     keyboardScale = p.lerp(10, 1, 1 - Math.pow(1 - elapsed, 3));
+    keyboardHeight = p.lerp(1700, state.isDecoding ? 300 : 0, 1 - Math.pow(1 - elapsed, 3));
     keyboardAnimationF++;
 };
 

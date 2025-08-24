@@ -44,15 +44,15 @@ export const draw = () => {
 
         p.push();
         {
-            p.translate(0, state.isDecoding ? 200 : 0);
+            p.translate(0, audio.keyboardHeight);
             p.noSmooth();
             p.scale(audio.keyboardScale);
             p.image(
                 pixelDraw.kg,
-                -(pixelDraw.kg.width * 8) / 2,
-                -(pixelDraw.kg.height * 8) / 2,
-                pixelDraw.kg.width * 8,
-                pixelDraw.kg.height * 8
+                -(pixelDraw.kg.width * 10) / 2,
+                -((pixelDraw.kg.height + (45 - 15)) * 10) / 2,
+                pixelDraw.kg.width * 10,
+                pixelDraw.kg.height * 10
             );
         }
         p.pop();
