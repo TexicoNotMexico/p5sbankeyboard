@@ -11,16 +11,13 @@ export class Decoder {
     }
 
     onNoteOn(note: number) {
-        this.rawNoteInputs.push(note);
+        this.rawNoteInputs.push(note - 12 * state.octaveOffset + 60);
     }
 
     private getNoteInputsString(): string {
         return this.rawNoteInputs
-            .filter((n) => n - 12 * state.octaveOffset + 60 in constants.decodeMapping)
-            .map(
-                (n) =>
-                    constants.decodeMapping[(n - 12 * state.octaveOffset + 60) as keyof typeof constants.decodeMapping]
-            )
+            .filter((n) => n in constants.decodeMapping)
+            .map((n) => constants.decodeMapping[n as keyof typeof constants.decodeMapping])
             .join("");
     }
 

@@ -33,13 +33,7 @@ export const setup = () => {
     control.setup();
 };
 
-let scale = 64;
-
 export const draw = () => {
-    audio.isToneStarted && (scale = Math.max(scale - 1, 8));
-
-    p.clear();
-
     p.fill(0);
     p.rect(0, 0, constants.canvasWidth, constants.canvasHeight);
 
@@ -52,12 +46,13 @@ export const draw = () => {
         {
             p.translate(0, state.isDecoding ? 200 : 0);
             p.noSmooth();
+            p.scale(audio.keyboardScale);
             p.image(
                 pixelDraw.kg,
-                -(pixelDraw.kg.width * scale) / 2,
-                -(pixelDraw.kg.height * scale) / 2,
-                pixelDraw.kg.width * scale,
-                pixelDraw.kg.height * scale
+                -(pixelDraw.kg.width * 8) / 2,
+                -(pixelDraw.kg.height * 8) / 2,
+                pixelDraw.kg.width * 8,
+                pixelDraw.kg.height * 8
             );
         }
         p.pop();

@@ -4,10 +4,15 @@ import { NoteMessageEvent } from "webmidi";
 
 export let isToneStarted: boolean;
 
+let isKeyboardAnimating: boolean = false;
+let keyboardAnimationF: number = 0;
+export let keyboardScale: number = 60;
+
 export const toneStarter = async () => {
     if (isToneStarted) return;
     await Tone.start();
     isToneStarted = true;
+    !isKeyboardAnimating && (isKeyboardAnimating = true);
     console.log("Tone.js started");
 };
 
@@ -51,6 +56,18 @@ export const draw = () => {
         }
         p.pop();
     }
+    isKeyboardAnimating && keyboardAnimation();
+};
+
+const keyboardAnimationDuration = 120;
+const keyboardAnimation = () => {
+    if (keyboardAnimationF > keyboardAnimationDuration) {
+        isKeyboardAnimating = false;
+        return;
+    }
+    const elapsed = keyboardAnimationF / keyboardAnimationDuration;
+    keyboardScale = p.lerp(10, 1, 1 - Math.pow(1 - elapsed, 3));
+    keyboardAnimationF++;
 };
 
 export const onNoteMessage = (e: NoteMessageEvent) => {
