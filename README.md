@@ -10,6 +10,9 @@
 - **D**: 複合モード切り替え
 - **R**: 復号結果をリセット
 
+> [!WARNING]
+> MIDI 入力が必要です。MIDI 入力できる実機がない人はバーチャル MIDI ケーブルを用いるのがおすすめ。
+
 ## 利用著作物
 
 - [源全ゴシック改](https://drive.google.com/drive/folders/19WidrJoCmI5qLJV-eR_ydURIwxB2-DSH) (`public/GenZenGothic.ttf`)
