@@ -44,7 +44,7 @@ export const draw = () => {
 
         p.push();
         {
-            p.translate(0, audio.keyboardHeight);
+            p.translate(0, audio.isKeyboardAnimating ? audio.keyboardHeight : state.isDecoding ? 300 : 0);
             p.noSmooth();
             p.scale(audio.keyboardScale);
             p.image(

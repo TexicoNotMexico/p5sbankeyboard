@@ -5,7 +5,7 @@ import { NoteMessageEvent } from "webmidi";
 
 export let isToneStarted: boolean;
 
-let isKeyboardAnimating: boolean = false;
+export let isKeyboardAnimating: boolean = false;
 let keyboardAnimationF: number = 0;
 export let keyboardScale: number = 10;
 export let keyboardHeight: number = 1700;
